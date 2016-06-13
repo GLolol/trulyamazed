@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Level Format Specification - TrulyAmazed</title>
+<link rel="stylesheet" type="text/css" href="../lib/readme-styles.css">
+</head>
+
+<body>
+
+<h1>TrulyAmazed Level Format Specification</h1>
+<p>Level presets are stored in the JSON format as a list of objects, where each object is a level. Each level contains keys determining its settings, and the following keys are available:</p>
+<p>Note: <b>if a key is not given in a level, the generator will default to the value given in the editor</b>. This is probably not what you want, so it's important to define keys evaluating to false instead of leaving them blank.</p>
+<p>Note 2: When a level preset runs out of levels and no winning stage was specified, the last level defined in the levels list will be reused until the player runs out of fuel or otherwise loses. This is what allows <code>Get to as many levels as possible!.json</code> to generate mazes with the same settings indefinitely.</p>
+<ul>
+<li><b>caption</b> (string, optional) - Sets the caption that should display in the bottom of the game window. If not defined, defaults to the welcome caption specified in <code>config.py</code></li>
+<li><b>checkpoints</b> (int) - Determines the amount of checkpoints present in the level.</li>
+<li><b>darkness</b> (boolean) - Determines whether darkness should be used</li>
+<li><b>death_caption</b> (string) - Determines what text should be displayed when the player loses a level. If not defined, defaults to the game over text defined in <code>mazegame.py</code>. This should usually contain one <code>%s</code> value for substituting the score in.</li>
+<li><b>enemies</b> (int) - Determines the amount of enemies present in level.</li>
+<li><b>enemy_move_delay</b> (int) - Determines the delay (in milliseconds) between each time enemies move. If set to 0, enemies will not move at all.</li>
+<li><b>finish_bonus</b> (int) - Determines the fuel bonus that the player should receive when they win a level.</li>
+<li><b>flashlight_radius</b> (int) - Determines the distance in tiles that the light around the player should illuminate when darkness is enabled. This defaults to half the maze width or height (whichever is smaller), rounded up. Obviously this has no effect when darkness is disabled.</li>
+<li><b>fuel_pack_amount</b> (int) - Determines the amount of fuel each fuel pack should give the player.</li>
+<li><b>fuel_packs</b> (int) - Determines the amount of fuel packs present in the level. </li>
+<li><b>gunshot_fuel</b> (int) -  Determines the amount of fuel each gunshot (space key) takes up.</li>
+<li><b>height</b> (int) - Determines the height of the maze.</li>
+<li><b>min_difficulty</b> (int) - Determines the minimum difficulty, which is the minimum distance between the start and the finish points. This is incompatible with static starts/finishes and will be ignored if either is set.</li>
+<li><b>starting_fuel</b> (int) - Determines the amount of fuel the player should start the game. This ONLY takes effect when defined in the first level object of a level preset.</li>
+<li><b>static_finish</b> (two-length list of ints (e.g. <code>[5,6]</code>) - Determines the position of a static finish for the level. If this is outside the maze boundaries or not given, the setting will be ignored and a random finish will be generated.</li>
+<li><b>static_start</b> (two-length list of ints (e.g. <code>[0,0]</code>) - Determines the position of a static start for the level. If this is outside the maze boundaries or not given, the setting will be ignored and a start finish will be generated.</li>
+<li><b>use_fuel</b> (boolean) - Determines whether fuel should automatically decrease over time (as a time limit challenge).</li>
+<li><b>width</b> (int) - Determines the width of the maze.</li>
+<li><b>win_caption</b> (string) - Determines what text should be displayed when the player wins a level preset: i.e. when they beat a stage that has <code>winning_stage</code> set to True. If not defined, defaults to the game over text defined in <code>mazegame.py</code>. This should usually contain one <code>%s</code> value for substituting the score in.</li>
+<li><b>winning_stage</b> (boolean) - Determines whether the level in question should be a winning_stage: i.e. If they win, the game will stop with the <code>win_caption</code> specified.</li>
+</ul>
+
+<a href="../readme.html">Home</a>
+</body>
+</html>

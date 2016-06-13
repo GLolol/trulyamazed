@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>README - TrulyAmazed</title>
+<link rel="stylesheet" type="text/css" href="lib/readme-styles.css">
+</head>
+
+<body>
+
+<h1>TrulyAmazed</h1>
+<p><i>~It's literally amazing!~</i></p>
+
+<p>TrulyAmazed is a game featuring systematically generated mazes and various gameplay options.</p>
+
+<h2>Installation</h2>
+<p>TrulyAmazed is designed to be ran from source, though the dependencies must be installed first.</p>
+
+<h3>Windows</h3>
+<p>First, install <a href="https://www.python.org/downloads/">Python 3.5</a>.</p>
+<p>Then, install PyQt5 (for Python 3.5) from the <a href="https://www.riverbankcomputing.com/software/pyqt/download5">Riverbank website</a>. Scroll down to the "Binary Packages" sections for download links.</p>
+
+<h3>*nix, other</h3>
+<p>Install Python 3 and PyQt5 from your distribution's package repositories.</p>
+
+<h2>Modules</h2>
+<p>TrulyAmazed provides two GUI programs. Normally, you can run them with <code>python $appname.py</code> or <code>python3 $appname.py</code>, <b>provided the right version of Python is in your PATH.</b></p>
+<ul>
+<li><b>mazegui.py</b> - PyQt5-based maze generator (no gameplay) supporting image export and mazes up to 200x200.</li>
+<li><b>mazegame.py</b> - Interactive maze game with enemies, time limits, level presets, and other challenges.</li>
+</ul>
+
+<h2>Notes</h2>
+<p>Future versions of this package will be available at <a href="https://github.com/GLolol/trulyamazed">https://github.com/GLolol/trulyamazed</a>.
+
+<h3>Presets</h3>
+<p>TrulyAmazed supports JSON level presets for the game portion. Examples of these are in the <code>presets/</code> folder, and the level format is documented <a href="presets/readme.html">here</a>.</p>
+
+<h3>Image demos</h3>
+<p>Some demos of TrulyAmazed's image exporting features are available in the <code>demos/</code> folder.</p>
+
+<img src="demos/16x16.png" title="16x16 maze">
+<img src="demos/20x10.png" title="20x10 (non-square) maze">
+<img src="demos/static_finishes.png" title="40x40 maze with static finishes">
+<img src="demos/100x100.png" title="a large 100x100 maze (can you find the start and finish?!)">
+
+</body>
+</html>

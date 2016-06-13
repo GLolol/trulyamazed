@@ -1,0 +1,8 @@
+[
+{"darkness": false, "enemies": 0, "fuel_packs": 0, "height": 12, "static_finish": null, "static_start": null, "width": 12, "finish_bonus": 10, "fuel_pack_amount": 10, "use_fuel": true, "starting_fuel": 2000, "min_difficulty": 8, "caption": "", "checkpoints": 0},
+{"darkness": false, "enemies": 0, "fuel_packs": 5, "height": 16, "static_finish": null, "static_start": null, "width": 16, "finish_bonus": 50, "fuel_pack_amount": 30, "use_fuel": true, "min_difficulty": 12, "caption": "", "checkpoints": 0},
+{"darkness": false, "enemies": 0, "fuel_packs": 12, "height": 20, "static_finish": null, "static_start": null, "width": 20, "finish_bonus": 175, "fuel_pack_amount": 100, "use_fuel": true, "min_difficulty": 13, "caption": "", "checkpoints": 1},
+{"darkness": false, "enemies": 0, "fuel_packs": 12, "height": 24, "static_finish": null, "static_start": null, "width": 24, "finish_bonus": 150, "fuel_pack_amount": 100, "use_fuel": true, "min_difficulty": 14, "caption": "", "checkpoints": 0},
+{"darkness": false, "enemies": 0, "fuel_packs": 11, "height": 24, "static_finish": null, "static_start": null, "width": 25, "finish_bonus": 200, "fuel_pack_amount": 100, "use_fuel": true, "min_difficulty": 14, "caption": "", "checkpoints": 1},
+{"darkness": false, "enemies": 0, "fuel_packs": 11, "height": 21, "static_finish": null, "static_start": null, "width": 21, "finish_bonus": 150, "fuel_pack_amount": 100, "use_fuel": true, "min_difficulty": 13, "caption": "Last level!", "checkpoints": 2, "winning_stage": true}
+]

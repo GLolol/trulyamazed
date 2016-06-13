@@ -1,0 +1,3 @@
+[{"darkness": true, "enemies": 1, "fuel_packs": 7, "height": 10, "static_finish": [9,9], "static_start": [0,0], "width": 10, "finish_bonus": 20, "fuel_pack_amount": 10, "use_fuel": true, "caption": "The finish is at the bottom right of the stage.", "checkpoints": 0},
+{"darkness": true, "enemies": 2, "fuel_packs": 10, "height": 15, "static_finish": [14,14], "static_start": [0,0], "width": 15, "finish_bonus": 70, "fuel_pack_amount": 20, "use_fuel": true, "checkpoints": 1, "caption": ""},
+{"darkness": true, "enemies": 4, "fuel_packs": 25, "height": 20, "static_finish": [19,19], "static_start": [0,0], "width": 20, "finish_bonus": 50, "fuel_pack_amount": 35, "use_fuel": true, "checkpoints": 2, "winning_stage": true, "caption": ""}]

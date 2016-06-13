@@ -1,0 +1,15 @@
+/* This file isn't technically part of the program; it's styling for the README files used. */
+
+body {
+    margin: 1%;
+}
+h1, h2 {
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+}
+h1 {
+    color: #353;
+    border-bottom: 1px solid #888;
+}
+h2 {
+    color: DarkSlateBlue;
+}
