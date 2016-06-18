@@ -4,7 +4,7 @@
 {"darkness": false, "enemies": 0, "fuel_packs": 8, "height": 10, "static_finish": null, "static_start": null, "width": 10, "finish_bonus": 10, "fuel_pack_amount": 20, "use_fuel": true,
 "caption": "The fuel gauge on the bottom right determines how much time you have left to complete the level. Along the way, you can collect fuel packs (yellow dots) to increase your fuel.", "min_difficulty": 5, "gunshot_fuel": 0, "checkpoints": 0},
 {"darkness": false, "enemies": 7, "fuel_packs": 0, "height": 12, "static_finish": null, "static_start": null, "width": 12, "finish_bonus": 60, "fuel_pack_amount": 20, "use_fuel": true, "enemy_move_delay": 0,
-"caption": "Red dots are enemies. Don't touch them or you'll die! You can shoot enemies using the Shift key, and turn your laser in place by holding Space and an arrow key.", "min_difficulty": 5, "gunshot_fuel": 0, "checkpoints": 0},
+"caption": "Red dots are enemies. Don't touch them or you'll die! You can shoot enemies using the Space key, and turn your laser in place by holding Shift and an arrow key.", "min_difficulty": 5, "gunshot_fuel": 0, "checkpoints": 0},
 {"darkness": false, "enemies": 4, "fuel_packs": 12, "height": 12, "static_finish": null, "static_start": null, "width": 12, "finish_bonus": 40, "fuel_pack_amount": 60, "use_fuel": true, "enemy_move_delay": 250,
 "caption": "Enemies can also move around, making them somewhat dangerous. Note that shooting your gun now consumes fuel too!", "min_difficulty": 5,
 "gunshot_fuel": 12, "checkpoints": 0},
