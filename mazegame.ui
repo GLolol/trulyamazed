@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>803</width>
-    <height>766</height>
+    <width>922</width>
+    <height>718</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -87,8 +87,27 @@
         <property name="title">
          <string>Options</string>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="0" column="1">
+          <widget class="QGroupBox" name="gunshot_fuel_groupbox">
+           <property name="title">
+            <string>Fuel used by gunshot</string>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <item>
+             <widget class="QSpinBox" name="gunshot_fuel_spinbox">
+              <property name="minimum">
+               <number>-99</number>
+              </property>
+              <property name="value">
+               <number>10</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="0" column="0">
           <widget class="QGroupBox" name="mazesize_groupbox">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -129,10 +148,17 @@
            </layout>
           </widget>
          </item>
-         <item>
+         <item row="5" column="1">
+          <widget class="QPushButton" name="set_static_finish">
+           <property name="text">
+            <string>Set fixed end point</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
           <widget class="QGroupBox" name="fuelpacks_groupbox">
            <property name="title">
-            <string>No. of Enemies/Fuel packs</string>
+            <string># of Enemies/Fuel packs</string>
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <item>
@@ -144,36 +170,21 @@
            </layout>
           </widget>
          </item>
-         <item>
-          <widget class="QGroupBox" name="mindiff_groupbox">
-           <property name="toolTip">
-            <string>Minimum difficulty determines the minimum distance between the start and the finish points.
-This is incompatible with static starts/finishes and will be ignored if either is set.</string>
+         <item row="3" column="1">
+          <widget class="QCheckBox" name="enable_fuel">
+           <property name="text">
+            <string>Fuel decreases over time
+(requires regeneration)</string>
            </property>
-           <property name="title">
-            <string>Min. difficulty/Finish bonus</string>
+           <property name="checked">
+            <bool>true</bool>
            </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_5">
-            <item>
-             <widget class="QSpinBox" name="min_difficulty_spinbox"/>
-            </item>
-            <item>
-             <widget class="QSpinBox" name="finish_bonus_spinbox">
-              <property name="maximum">
-               <number>10000</number>
-              </property>
-              <property name="value">
-               <number>50</number>
-              </property>
-             </widget>
-            </item>
-           </layout>
           </widget>
          </item>
-         <item>
+         <item row="3" column="0">
           <widget class="QGroupBox" name="fuelsettings_groupbox">
            <property name="title">
-            <string>Starting fuel/Fuel pack amt.</string>
+            <string>Starting fuel/Fuel pk. amt.</string>
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_6">
             <item>
@@ -205,51 +216,7 @@ This is incompatible with static starts/finishes and will be ignored if either i
            </layout>
           </widget>
          </item>
-         <item>
-          <widget class="QGroupBox" name="enemysettings_groupbox">
-           <property name="title">
-            <string>Enemy move delay/Checkpoints</string>
-           </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_7">
-            <item>
-             <widget class="QSpinBox" name="move_delay_spinbox">
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>10000</number>
-              </property>
-              <property name="value">
-               <number>250</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSpinBox" name="checkpoints_spinbox"/>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QGroupBox" name="gunshot_fuel_groupbox">
-           <property name="title">
-            <string>Fuel consumed by gunshot</string>
-           </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_8">
-            <item>
-             <widget class="QSpinBox" name="gunshot_fuel_spinbox">
-              <property name="minimum">
-               <number>-99</number>
-              </property>
-              <property name="value">
-               <number>10</number>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
+         <item row="1" column="1">
           <widget class="QCheckBox" name="force_square_tiles">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
@@ -265,7 +232,7 @@ This is incompatible with static starts/finishes and will be ignored if either i
            </property>
           </widget>
          </item>
-         <item>
+         <item row="2" column="1">
           <widget class="QCheckBox" name="enable_darkness">
            <property name="text">
             <string>Enable darkness
@@ -273,29 +240,75 @@ This is incompatible with static starts/finishes and will be ignored if either i
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QCheckBox" name="enable_fuel">
-           <property name="text">
-            <string>Fuel decreases over time
-(requires regeneration)</string>
+         <item row="2" column="0">
+          <widget class="QGroupBox" name="mindiff_groupbox">
+           <property name="toolTip">
+            <string>Minimum difficulty determines the minimum distance between the start and the finish points.
+This is incompatible with static starts/finishes and will be ignored if either is set.</string>
            </property>
-           <property name="checked">
-            <bool>true</bool>
+           <property name="title">
+            <string>Difficulty/Finish bonus</string>
            </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <item>
+             <widget class="QSpinBox" name="min_difficulty_spinbox"/>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="finish_bonus_spinbox">
+              <property name="maximum">
+               <number>10000</number>
+              </property>
+              <property name="value">
+               <number>50</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </item>
-         <item>
+         <item row="5" column="0">
           <widget class="QPushButton" name="set_static_start">
            <property name="text">
             <string>Set fixed start point</string>
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QPushButton" name="set_static_finish">
-           <property name="text">
-            <string>Set fixed end point</string>
+         <item row="4" column="0">
+          <widget class="QGroupBox" name="enemysettings_groupbox">
+           <property name="title">
+            <string>Enemy speed/Checkpoints</string>
            </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_7">
+            <item>
+             <widget class="QSpinBox" name="move_delay_spinbox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>10000</number>
+              </property>
+              <property name="value">
+               <number>250</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="checkpoints_spinbox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </item>
         </layout>
@@ -472,13 +485,13 @@ To reload a level, use the &quot;Load&quot; button in Level settings below.</str
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>803</width>
-     <height>21</height>
+     <width>922</width>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>Fi&amp;le</string>
     </property>
     <addaction name="actionQuit"/>
    </widget>
@@ -501,14 +514,13 @@ To reload a level, use the &quot;Load&quot; button in Level settings below.</str
   </action>
   <action name="actionAbout">
    <property name="text">
-    <string>About</string>
+    <string>&amp;About</string>
    </property>
   </action>
  </widget>
  <tabstops>
   <tabstop>width_spinbox</tabstop>
   <tabstop>height_spinbox</tabstop>
-  <tabstop>force_square_tiles</tabstop>
   <tabstop>generate_button</tabstop>
  </tabstops>
  <resources/>
