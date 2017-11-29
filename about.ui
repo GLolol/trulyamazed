@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>333</width>
-    <height>129</height>
+    <height>210</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -25,8 +25,17 @@
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
     <widget class="QPlainTextEdit" name="plainTextEdit">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="whatsThis">
       <string>It's the about window!</string>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
      </property>
      <property name="verticalScrollBarPolicy">
       <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -34,13 +43,15 @@
      <property name="horizontalScrollBarPolicy">
       <enum>Qt::ScrollBarAlwaysOff</enum>
      </property>
+     <property name="undoRedoEnabled">
+      <bool>false</bool>
+     </property>
      <property name="readOnly">
       <bool>true</bool>
      </property>
      <property name="plainText">
-      <string>TrulyAmazed Maze Game.
+      <string>TrulyAmazed (c) 2015-2017 James Lu
 
-(c) 2015-2016 James Lu &lt;glolol@overdrivenetworks.com&gt;
 Some rights reserved. See LICENSE.txt for details.</string>
      </property>
     </widget>
