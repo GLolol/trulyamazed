@@ -113,22 +113,6 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="force_square_tiles">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Force square previews</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
             <widget class="QLabel" name="image_size_label">
@@ -210,12 +194,12 @@ This is incompatible with static starts/finishes and will be ignored if either i
      <x>0</x>
      <y>0</y>
      <width>700</width>
-     <height>21</height>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>Fi&amp;le</string>
     </property>
     <addaction name="actionQuit"/>
    </widget>
@@ -238,7 +222,7 @@ This is incompatible with static starts/finishes and will be ignored if either i
   </action>
   <action name="actionAbout">
    <property name="text">
-    <string>About</string>
+    <string>&amp;About</string>
    </property>
   </action>
  </widget>

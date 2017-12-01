@@ -274,17 +274,12 @@ class MazeGUI(QMainWindow):
         self.tile_width = round_down_to_even(width / (self.mazewidth + 1))
         self.tile_height = round_down_to_even(height / (self.mazeheight + 1))
 
-        if self.tile_width == 0 or self.tile_height == 0:
-            # Oh no, our window size is too small for the maze! We can't draw
-            # anything meaningful because our tile size is ZERO!
+        if self.tile_width <= 0 or self.tile_height <= 0:
+            # Bail if the screen is too small to draw the tiles (size <= 0)
             return False
 
-        if self.ui.force_square_tiles.isChecked():
-            # If Force Square Tiles is set, set the tile height and width to the
-            # smaller of the two. This makes sure that the maze fits on the display.
-            self.tile_height = self.tile_width = min(self.tile_width, self.tile_height)
-
-        #debug_print("Got tile size to be %s by %s" % (self.tile_width, self.tile_height))
+        # Make the previews square.
+        self.tile_height = self.tile_width = min(self.tile_width, self.tile_height)
 
         xpos = self.tile_width
         ypos = self.tile_height
