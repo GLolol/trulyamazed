@@ -20,9 +20,8 @@ INTENSITY = 12
 class RPiMaze(MazeGame):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.init_leds()
 
-    def init_leds(self):
+        # Set up NeoPixel
         self.np = Adafruit_NeoPixel(NUM_PIXELS, GPIO_PIN, brightness=INTENSITY)
         self.np.begin()
 
