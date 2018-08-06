@@ -131,7 +131,7 @@ class RPiMaze(MazeGame):
                 if 'east' not in paths:
                     wall_points_to_draw.add((led_xpos+1, led_ypos))
                 if 'west' not in paths:
-                    wall_points_to_draw.add((led_xpos+1, led_ypos))
+                    wall_points_to_draw.add((led_xpos-1, led_ypos))
 
                 self._draw_walls(wall_points_to_draw)
                 self.draw_point_at(led_xpos, led_ypos, color)
