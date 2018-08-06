@@ -100,6 +100,8 @@ class RPiMaze(MazeGame):
         """
         Draws the maze on an LED strip.
         """
+        for pixel in range(NUM_PIXELS):
+            np.setPixelColorRGB(pixel, 0, 0, 0)
         for ypos, row in enumerate(self.maze):
             for xpos, point in enumerate(row):
                 if point.is_finish:
