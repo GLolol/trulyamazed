@@ -18,15 +18,23 @@ try:
 except ImportError:
     print("neopixel NOT FOUND - using dummy placeholder library instead.")
     class Dummy_NeoPixel:
-        def __init__(self, *args, **kwargs):
-            print("Got args: %s, kwargs: %s" % (args, kwargs))
+        def __init__(self, npixels, *args, **kwargs):
+            self._npixels = npixels
+            self._data = [None for _ in range(npixels)]
 
         def begin(self):
             pass
 
-        show = begin
+        def show(self):
+            if SHOW_DUMMY_VALUES:
+                for idx, color in enumerate(self._data):
+                    print("Pixel #%s: %s" % (idx, color))
 
         def setPixelColorRGB(self, target, *color):
+            try:
+                self._data[target] = color
+            except IndexError:
+                print("Out of range target %s" % target)
             print("Setting pixel %s to %s" % (target, str(color)))
 
     Adafruit_NeoPixel = Dummy_NeoPixel
