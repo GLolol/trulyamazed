@@ -104,22 +104,23 @@ class RPiMaze(MazeGame):
 
                 led_xpos = xpos * 2
                 led_ypos = ypos * 2
+                print("Translating player position (%s, %s) into LED position (%s, %s)" % (xpos, ypos, led_xpos, led_ypos))
 
-                wall_points_to_draw = [
+                wall_points_to_draw = {
                     (led_xpos-1, led_ypos-1),
                     (led_xpos-1, led_ypos+1),
                     (led_xpos+1, led_ypos-1),
                     (led_xpos+1, led_ypos+1)
-                ]
+                }
                 paths = point.paths
                 if 'north' not in paths:
-                    wall_points_to_draw.append((led_xpos, led_ypos-1))
+                    wall_points_to_draw.add((led_xpos, led_ypos-1))
                 if 'south' not in paths:
-                    wall_points_to_draw.append((led_xpos, led_ypos+1))
+                    wall_points_to_draw.add((led_xpos, led_ypos+1))
                 if 'east' not in paths:
-                    wall_points_to_draw.append((led_xpos+1, led_ypos))
+                    wall_points_to_draw.add((led_xpos+1, led_ypos))
                 if 'west' not in paths:
-                    wall_points_to_draw.append((led_xpos+1, led_ypos))
+                    wall_points_to_draw.add((led_xpos+1, led_ypos))
 
                 self._draw_walls(wall_points_to_draw)
                 self.draw_point_at(led_xpos, led_ypos, color)
