@@ -53,10 +53,10 @@ class RPiMaze(MazeGame):
     @functools.lru_cache(maxsize=512)
     def _get_serpentine_point(x, y):
         """
-        Returns the point in the serpentine LED pattern given x and y coordinates.
+        Returns the LED number in the serpentine pattern used by LED matrix given x and y coordinates
+        (starting at top left being (0, 0)).
         """
-        # The LEDs on a matrix are wired so that the array of LEDs are sorted this way:
-
+        # The LEDs on the matrix we're testing are wired in this way:
         #top left
         #  7  6  5  4  3  2  1  0
         #  8  9 10 11 12 13 14 15
@@ -66,8 +66,9 @@ class RPiMaze(MazeGame):
         #                  bottom right
 
         # ..., where every even row (indexing from 0) is in reverse
+        # XXX: is this at all portable?
 
-        result = (y * MATRIX_WIDTH) + ((MATRIX_WIDTH - x - 1) if (y % 2 == 0) else (x))
+        result = (y * MATRIX_WIDTH) + ((MATRIX_WIDTH - x - 1) if (y % 2 == 0) else x)
         return result
 
     def draw_point_at(self, x, y, color):
