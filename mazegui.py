@@ -75,7 +75,7 @@ class MazeGUI(QMainWindow):
         self.ui.actionQuit.triggered.connect(self.closeEvent)
         self.ui.actionAbout.triggered.connect(self.show_about)
 
-        self.display.paintEvent = self.paintEvent
+        self.display.paintEvent = self._display_paintEvent
 
         # Lambda functions wrap around select_tile() so it's called with arguments
         debug_print("Connecting set static start/finish buttons")
@@ -87,10 +87,11 @@ class MazeGUI(QMainWindow):
         # each mouse movement, and not just for clicks.
         self.display.setMouseTracking(True)
 
-        self.display.mouseMoveEvent = self.mouseMoveEvent
-        self.display.mousePressEvent = self.mousePressEvent
+        self.display.mouseMoveEvent = self._display_mouseMoveEvent
+        self.display.mousePressEvent = self._display_mousePressEvent
 
-    def paintEvent(self, event):
+    # Don't use paintEvent is function name - that automatically gets registered to the main widget!
+    def _display_paintEvent(self, event):
         # In order to draw lines, shapes, etc. on a canvas, we use the QPainter
         # class.
         # QPainter() will only draw on widgets if called from the paintEvent()
@@ -123,7 +124,7 @@ class MazeGUI(QMainWindow):
 
     # Override the mouseMoveEvent function in our display object
     # to track the mouse positions.
-    def mouseMoveEvent(self, event):
+    def _display_mouseMoveEvent(self, event):
         if not self.select_type:
             # No selection process is going on.
             return
@@ -162,7 +163,7 @@ class MazeGUI(QMainWindow):
     # Ditto with the mouse pressed event: when the display is pressed after
     # a point is chosen, make that the selected point and disable the
     # tile selection overlay.
-    def mousePressEvent(self, event):
+    def _display_mousePressEvent(self, event):
         if not (self.selected_point and self.select_type and self.generated):
             # No valid point was selected, or the selection overlay isn't enabled.
             return
