@@ -41,12 +41,10 @@ class MazeGUI(QMainWindow):
         # class).
         super().__init__()
 
-        # Use a thread-safe Event object to keep track of whether we've quit.
         self.has_quit = threading.Event()
         self.app = app
 
-        # Initialize some variables. self.generated sets tells whether we've
-        # generated a maze yet (draw won't do anything unless this is set).
+        # Whether we've generated a maze yet (draw won't do anything if this is False).
         self.generated = False
 
         # These variables define point selections and static start/finish points.
@@ -64,10 +62,11 @@ class MazeGUI(QMainWindow):
         # Default level data is empty.
         self.leveldata = {}
 
-        # The actual GUI layout is made using a program called Qt Designer,
-        # which lets you design graphical interfaces and save them as XML-format
-        # .ui files. All this does is tell PyQt to load the UI file and display
-        # its contents as the main window.
+        self._load_ui(uifile)
+
+        self.setup_elements()
+
+    def _load_ui(self, uifile):
         self.ui = loadUi(uifile, self)
         self.ui.show()
         self.display = self.ui.display
@@ -90,8 +89,6 @@ class MazeGUI(QMainWindow):
 
         self.display.mouseMoveEvent = self.mouseMoveEvent
         self.display.mousePressEvent = self.mousePressEvent
-
-        self.setup_elements()
 
     def paintEvent(self, event):
         # In order to draw lines, shapes, etc. on a canvas, we use the QPainter
