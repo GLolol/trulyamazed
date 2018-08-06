@@ -6,7 +6,23 @@ from PyQt5.QtGui import *
 from PyQt5.uic import loadUi
 #from PyQt5.QtCore import *
 
-from neopixel import *
+try:
+    from neopixel import *
+except ImportError:
+    print("neopixel NOT FOUND - using dummy placeholder library instead.")
+    class Dummy_NeoPixel:
+        def __init__(self, *args, **kwargs):
+            print("Got args: %s, kwargs: %s" % (args, kwargs))
+
+        def begin(self):
+            pass
+
+        show = begin
+
+        def setPixelColorRGB(self, target, *color):
+            print("Setting pixel %s to %s" % (target, str(color)))
+
+    Adafruit_NeoPixel = Dummy_NeoPixel
 
 from mazegame import MazeGame
 
