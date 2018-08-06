@@ -81,10 +81,10 @@ class RPiMaze(MazeGame):
 
     def draw_point_at(self, x, y, color):
         # Don't try to draw out of bounds
-        if y > (MATRIX_HEIGHT) or y < 0:
+        if y > (MATRIX_HEIGHT-1) or y < 0:
             print("Ignoring out of bound point %s, %s" % (x, y))
             return
-        if x > (MATRIX_WIDTH) or x < 0:
+        if x > (MATRIX_WIDTH-1) or x < 0:
             print("Ignoring out of bound point %s, %s" % (x, y))
             return
 
