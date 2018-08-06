@@ -6,6 +6,13 @@ from PyQt5.QtGui import *
 from PyQt5.uic import loadUi
 #from PyQt5.QtCore import *
 
+GPIO_PIN = 18
+MATRIX_WIDTH = 16
+MATRIX_HEIGHT = 16
+NUM_PIXELS = MATRIX_WIDTH * MATRIX_HEIGHT
+INTENSITY = 12
+SHOW_DUMMY_VALUES = False
+
 try:
     from neopixel import *
 except ImportError:
@@ -25,13 +32,6 @@ except ImportError:
     Adafruit_NeoPixel = Dummy_NeoPixel
 
 from mazegame import MazeGame
-
-
-GPIO_PIN = 18
-MATRIX_WIDTH = 15
-MATRIX_HEIGHT = 15
-NUM_PIXELS = MATRIX_WIDTH * MATRIX_HEIGHT
-INTENSITY = 12
 
 class RPiMaze(MazeGame):
     def __init__(self, *args, **kwargs):
@@ -73,9 +73,11 @@ class RPiMaze(MazeGame):
 
     def draw_point_at(self, x, y, color):
         # Don't try to draw out of bounds
-        if y > (MATRIX_HEIGHT-1) or y < 0:
+        if y > (MATRIX_HEIGHT) or y < 0:
+            print("Ignoring out of bound point %s, %s" % (x, y))
             return
-        if x > (MATRIX_WIDTH-1) or x < 0:
+        if x > (MATRIX_WIDTH) or x < 0:
+            print("Ignoring out of bound point %s, %s" % (x, y))
             return
 
         target = self._get_serpentine_point(x, y)
@@ -83,6 +85,7 @@ class RPiMaze(MazeGame):
 
     def _draw_walls(self, wall_points_to_draw):
         for point in wall_points_to_draw:
+            print("Drawing LED point %s, %s as a wall" % (point[0], point[1]))
             self.draw_point_at(point[0], point[1], (255, 255, 255))
 
     def draw_maze_leds(self):
