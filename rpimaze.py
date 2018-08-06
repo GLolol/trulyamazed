@@ -56,27 +56,18 @@ class RPiMaze(MazeGame):
         Returns the point in the serpentine LED pattern given x and y coordinates.
         """
         # The LEDs on a matrix are wired so that the array of LEDs are sorted this way:
-        #  0  1  2  3  4  5  6  7
-        # 15 14 13 12 11 10  9  8
-        # 16 17 18 19 20 21 22 23
-        # 31 30 29 28 27 26 25 24
-        # 32 33 34 35 36 37 38 39
-        # ..., where every odd row (indexing from 0) is in reverse
 
-        # Traverse the y value down to the right row first
-        result = 0
-        for n in range(1, y+1):
-            if n % 2 == 1:
-                # e.g. from 0 to 15, 16 to 31 on an 8x8 matrix
-                result += (2*MATRIX_WIDTH - 1)
-            else:
-                # e.g. from 15 to 16, 31 to 32
-                result += 1
+        #top left
+        #  7  6  5  4  3  2  1  0
+        #  8  9 10 11 12 13 14 15
+        # 23 22 21 20 19 18 17 16
+        # 24 25 26 27 28 29 30 31
+        # 39 38 37 36 35 34 33 32
+        #                  bottom right
 
-        if y % 2 == 1:
-            result -= x  # Odd rows go in reverse
-        else:
-            result += x  # Even rows move forward
+        # ..., where every even row (indexing from 0) is in reverse
+
+        result = (y * MATRIX_WIDTH) + ((MATRIX_WIDTH - x - 1) if (y % 2 == 0) else (x))
         return result
 
     def draw_point_at(self, x, y, color):
