@@ -100,11 +100,11 @@ class MazeGUI(QMainWindow):
         if not self.generated:
             return  # Don't do anything if no maze has been generated
 
-        painter = QPainter()
-        painter.begin(self.display)
+        debug_print("paintEvent: making new painter")
+        painter = QPainter(self.display)
 
         draw_result = self.draw_maze(painter, self.display.width(), self.display.height())
-        if not draw_result:
+        if draw_result is False:
             # draw_maze() returns False if something went wrong. We should display an error
             # if this happens, usually because the maze size requested was too big to draw
             # in our preview window.
@@ -114,10 +114,12 @@ class MazeGUI(QMainWindow):
             # called every single time an UI element updates.
             debug_print("Hit paintEvent: draw_failed = %s" % self.draw_failed)
             if not self.draw_failed:
-                QMessageBox.warning(self.ui, "Error", "Could not draw maze with the given size, as there is not enough space in the window! Try increasing the window size, or using image export instead.")
+                QMessageBox.warning(self.ui, "Error",
+                                    "Could not draw maze with the given size, as there is"
+                                    "not enough space in the window! Try increasing the"
+                                    "window size, or using image export instead.")
 
             self.draw_failed = True
-        painter.end()
 
     # Override the mouseMoveEvent function in our display object
     # to track the mouse positions.
@@ -269,6 +271,8 @@ class MazeGUI(QMainWindow):
         the painter object, picture height, and picture width given.
         This returns True if successful, or False if an error occurred.
         """
+        if not painter.isActive():
+            return
         painter.setRenderHint(QPainter.Antialiasing)
         # Automatically find the best tile size for each piece of our maze by
         # finding the size of the display, and dividing that by the size of our
