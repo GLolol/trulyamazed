@@ -235,32 +235,21 @@ class MazeGUI(QMainWindow):
         debug_print("Calling make_maze() with start_point=%s, end_point=%s" % (self.static_start, self.static_finish))
         debug_print("Calling make_maze() with start_point=%s, end_point=%s" % (self.static_start, self.static_finish))
 
-        try:
-            self.maze = self.mg.generate(start_point=self.static_start, end_point=self.static_finish)
-        except ValueError:
-            # The maze we got wasn't random enough to get a path from the start to
-            # finish. Regenerate the maze.
-            self.make_maze()
-        else:
-            if self.mg.start.x == self.mg.finish.x and self.mg.start.y == self.mg.finish.y:
-                # The start point and finish point landed on the same point.
-                # This is also not random enough, so we should regenerate.
+        self.maze = self.mg.generate(start_point=self.static_start, end_point=self.static_finish)
+        # "Difficulty" is determined by the distance between the start and finish points.
+        # Level presets can choose a minimum difficulty, so the game is more balanced against
+        # spawning the start and finish points too close.
+        # This is ignored if the value is zero. The maximum allowed value is the smaller of the maze's width and height.
+        self.ui.min_difficulty_spinbox.setMaximum(min(self.mazewidth, self.mazeheight))
+        self.min_difficulty = self.leveldata.get('min_difficulty', self.ui.min_difficulty_spinbox.value())
+        if self.min_difficulty:
+            if self.static_finish or self.static_start:
+                QMessageBox.warning(self.ui, "Incompatible options selected", "Minimum difficulty cannot be tweaked in conjunction with static start/finish points. This setting will be ignored.")
+            elif self.mg.distance(self.mg.start, self.mg.finish) < self.min_difficulty:
+                # Not difficult enough; regenerate the maze.
                 self.make_maze()
 
-            # "Difficulty" is determined by the distance between the start and finish points.
-            # Level presets can choose a minimum difficulty, so the game is more balanced against
-            # spawning the start and finish points too close.
-            # This is ignored if the value is zero. The maximum allowed value is the smaller of the maze's width and height.
-            self.ui.min_difficulty_spinbox.setMaximum(min(self.mazewidth, self.mazeheight))
-            self.min_difficulty = self.leveldata.get('min_difficulty', self.ui.min_difficulty_spinbox.value())
-            if self.min_difficulty:
-                if self.static_finish or self.static_start:
-                     QMessageBox.warning(self.ui, "Incompatible options selected", "Minimum difficulty cannot be tweaked in conjunction with static start/finish points. This setting will be ignored.")
-                elif self.mg.distance(self.mg.start, self.mg.finish) < self.min_difficulty:
-                    # Not difficult enough; regenerate the maze.
-                    self.make_maze()
-
-            self.generated = True
+        self.generated = True
 
         # Poke the display to update itself
         self.display.update()
