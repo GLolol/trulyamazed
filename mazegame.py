@@ -45,6 +45,7 @@ class MazeGame(MazeGUI):
         # Define variables.
         self.fuel_timer = None
         self.player = None
+        self.sprites = []
         self.started = False
         self.fuel = None
         self.starting_fuel = None
@@ -137,6 +138,14 @@ class MazeGame(MazeGUI):
         for point in random.sample(valid_endpoints, self.checkpoint_count):
             fp = Checkpoint(self, point.x, point.y)
             self.sprites.append(fp)
+
+    def draw_maze(self, painter, width, height):
+        retcode = super().draw_maze(painter, width, height)
+
+        for character in self.sprites:
+            #debug_print("Drawing character %s" % character)
+            character.draw(painter)
+        return retcode
 
     def reset_state(self, level=0):
         """

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 ###
-# Copyright (c) 2016 James Lu <glolol@overdrivenetworks.com>
+# Copyright (c) 2016, 2018 James Lu <james@overdrivenetworks.com>
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -57,10 +57,6 @@ class MazeGUI(QMainWindow):
 
         # If this is True, the program will stop drawing and produce an error.
         self.draw_failed = False
-
-        # Define sprites (characters, etc.) that applications using the MazeGUI
-        # backend can use.
-        self.sprites = []
 
         # Defines whether darkness should be enabled in the maze
         self.use_darkness = False
@@ -124,12 +120,6 @@ class MazeGUI(QMainWindow):
                 QMessageBox.warning(self.ui, "Error", "Could not draw maze with the given size, as there is not enough space in the window! Try increasing the window size, or using image export instead.")
 
             self.draw_failed = True
-
-        # Draw all our characters if defined. Do this in reversed order so that the earliest
-        # created sprites get drawn on top.
-        for character in self.sprites:
-            #debug_print("Drawing character %s" % character)
-            character.draw(painter)
         painter.end()
 
     # Override the mouseMoveEvent function in our display object
