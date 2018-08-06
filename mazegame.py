@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 ###
-# Copyright (c) 2016 James Lu <glolol@overdrivenetworks.com>
+# Copyright (c) 2016, 2018 James Lu <james@overdrivenetworks.com>
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -54,11 +54,12 @@ class MazeGame(MazeGUI):
         super().__init__(app, uifile)
         self.reset_state()
 
-    def make_maze(self, reset_state=False):
-        """Generates a maze, overwriting any previously generated ones."""
+    def _sync_level_state(self):
+        """Syncs level settings with the configuration fields."""
         # Update the level settings: darkness, number of fuel packs, number of enemies, etc.
         # If no level is being loaded, fetch these values from our UI. But, also update the UI
         # elements if any values change due to level loading.
+
         self.use_darkness = self.leveldata.get('darkness', self.ui.enable_darkness.isChecked())
         self.use_fuel = self.leveldata.get('use_fuel', self.ui.enable_fuel.isChecked())
         self.ui.enable_darkness.setChecked(self.use_darkness)
@@ -68,8 +69,41 @@ class MazeGame(MazeGUI):
         self.ui.caption.setText(caption)
 
         # Update static start / finish settings, but only if it has changed.
+
         self.static_start = self.leveldata.get('static_start', self.static_start)
         self.static_finish = self.leveldata.get('static_finish', self.static_finish)
+
+        # Clear the sprites list.
+        self.sprites.clear()
+        self.checkpoints_hit = 0
+
+    def _get_unused_points(self):
+        """Returns all points that aren't the start or finish."""
+        allowed_points = self.maze.all_items()
+        allowed_points.remove(self.mg.start)
+        allowed_points.remove(self.mg.finish)
+        return allowed_points
+
+    def _get_unused_endpoints(self):
+        """Returns all end points that aren't the start or finish."""
+        unused_endpoints = list(self.mg.end_points)
+        try:
+            unused_endpoints.remove(self.mg.start)
+        except ValueError:
+            pass
+
+        try:
+            unused_endpoints.remove(self.mg.finish)
+        except ValueError:
+            pass
+
+        return unused_endpoints
+
+    def make_maze(self, reset_state=False):
+        """
+        Generates the maze.
+        """
+        self._sync_level_state()
 
         if reset_state:
             # Reset the score, but only if we've been told to do
@@ -77,18 +111,7 @@ class MazeGame(MazeGUI):
             debug_print("make_maze: resetting state")
             self.reset_state()
 
-        # Call the make_maze() of MazeGUI() to generate & draw.
         super().make_maze()
-
-        self.fuelpacks_count = self.leveldata.get('fuel_packs', self.ui.fuelpacks_spinbox.value())
-
-        # Fuel packs count cannot be greater than the amount of tiles in the maze
-        # (excluding start and finish points)!
-        self.fuelpacks_count = min(self.mazewidth*self.mazeheight-2, self.fuelpacks_count)
-        self.ui.fuelpacks_spinbox.setValue(self.fuelpacks_count)
-
-        # Clear the sprites list.
-        self.sprites = []
 
         if self.player:
             # Reset the player's position, if one exists.
@@ -99,41 +122,42 @@ class MazeGame(MazeGUI):
             # Re-add the player into the sprites list.
             self.sprites.append(self.player)
 
-        # Spawn fuel packs where needed. Note: Fuel packs cannot overlap start or finish point.
-        allowed_points = self.maze.all_items()
-        allowed_points.remove(self.mg.start)
-        allowed_points.remove(self.mg.finish)
+        self._make_fuel_packs()
+        self._make_enemies()
+        self._make_checkpoints()
 
-        for point in random.sample(allowed_points, self.fuelpacks_count):
+    def _make_fuel_packs(self):
+        # Fuel packs count cannot be greater than the amount of tiles in the maze
+        # (excluding start and finish points)!
+        self.fuelpacks_count = self.leveldata.get('fuel_packs', self.ui.fuelpacks_spinbox.value())
+        available_points = self._get_unused_points()
+        self.fuelpacks_count = min(len(available_points), self.fuelpacks_count)
+        self.ui.fuelpacks_spinbox.setValue(self.fuelpacks_count)
+
+        for point in random.sample(available_points, self.fuelpacks_count):
             debug_print('Spawning fuel pack at (%s, %s)' % (point.x, point.y))
             fp = FuelPack(self, point.x, point.y)
             self.sprites.append(fp)
 
-        # Do the same process for enemies
+    def _make_enemies(self):
+        available_points = self._get_unused_points()
         self.enemy_count = self.leveldata.get('enemies', self.ui.enemies_spinbox.value())
-        self.enemy_count = min(self.mazewidth*self.mazeheight-2, self.enemy_count)
+        self.enemy_count = min(len(available_points), self.enemy_count)
         self.ui.enemies_spinbox.setValue(self.enemy_count)
 
-        for point in random.sample(allowed_points, self.enemy_count):
+        for point in random.sample(available_points, self.enemy_count):
             fp = Enemy(self, point.x, point.y)
             self.sprites.append(fp)
 
+    def _make_checkpoints(self):
         # For checkpoints, choose random dead ends on the maze.
-        self.checkpoint_count = self.leveldata.get('checkpoints', self.ui.checkpoints_spinbox.value())
-        self.checkpoint_count = min(len(self.mg.end_points)-2, self.checkpoint_count)
-        self.ui.checkpoints_spinbox.setValue(self.checkpoint_count)
-        self.checkpoints_hit = 0
-
         # Don't allow checkpoints to spawn on the start or finish, however.
-        valid_endpoints = list(self.mg.end_points)
-        try:
-            valid_endpoints.remove(self.mg.start)
-        except ValueError:
-            pass
-        try:
-            valid_endpoints.remove(self.mg.finish)
-        except ValueError:
-            pass
+        valid_endpoints = self._get_unused_endpoints()
+
+        self.checkpoint_count = self.leveldata.get('checkpoints', self.ui.checkpoints_spinbox.value())
+        debug_print("_make_checkpoints: Found %s endpoints, wanted %s" % (len(valid_endpoints), self.checkpoint_count))
+        self.checkpoint_count = min(len(valid_endpoints), self.checkpoint_count)
+        self.ui.checkpoints_spinbox.setValue(self.checkpoint_count)
 
         for point in random.sample(valid_endpoints, self.checkpoint_count):
             fp = Checkpoint(self, point.x, point.y)
