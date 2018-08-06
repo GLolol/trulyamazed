@@ -112,6 +112,12 @@ class RPiMaze(MazeGame):
                     # Empty tile
                     color = (0, 0, 0)
 
+                for sprite in self.sprites:
+                    if sprite.x == xpos and sprite.y == ypos:
+                        # https://stackoverflow.com/a/29643643 TODO: abstract this out some more
+                        color = tuple(int(sprite.color.lstrip('#')[i:i+2], 16) for i in (0, 2, 4))
+                        print("Setting color to %s for sprite %s at %s, %s" % (color, sprite, xpos, ypos))
+
                 if point.is_selected:
                     color = (130, 0, 250)
 
