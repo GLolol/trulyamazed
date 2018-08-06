@@ -142,9 +142,10 @@ class MazeGame(MazeGUI):
     def draw_maze(self, painter, width, height):
         retcode = super().draw_maze(painter, width, height)
 
-        for character in self.sprites:
-            #debug_print("Drawing character %s" % character)
-            character.draw(painter)
+        if retcode:
+            for character in self.sprites:
+                #debug_print("Drawing character %s" % character)
+                character.draw(painter)
         return retcode
 
     def reset_state(self, level=0):
