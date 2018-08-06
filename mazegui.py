@@ -402,7 +402,7 @@ class MazeGUI(QMainWindow):
                 if 'west' not in paths:
                     painter.drawLine(xpos-xoffset, ypos-yoffset, xpos-xoffset, ypos+yoffset)
 
-                # After each point is drawn, add the tile width  to the x position
+                # After each point is drawn, add the tile width to the x position
                 # to move on to the next point.
                 xpos += self.tile_width
 
