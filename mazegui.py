@@ -80,46 +80,7 @@ class MazeGUI(QMainWindow):
         self.ui.actionQuit.triggered.connect(self.closeEvent)
         self.ui.actionAbout.triggered.connect(self.show_about)
 
-        # In order to draw lines, shapes, etc. on a canvas, we use the QPainter
-        # class.
-        # QPainter() will only draw on widgets if called from the paintEvent()
-        # function attached to it, so we must assign one for it here.
-        # paintEvent() is automatically called for by Qt whenever the object
-        # is moved, resized, etc.
-        def paintEvent(e):
-            if not self.generated:
-                return  # Don't do anything if no maze has been generated
-            #color = QColor(colorTable[shape])
-
-            # Create an instance of QPainter, and tell it to begin drawing
-            # on our display element (the big white box).
-            painter = QPainter()
-
-            painter.begin(self.display)
-
-            draw_result = self.draw_maze(painter, self.display.width(), self.display.height())
-            if not draw_result:
-                # draw_maze() returns False if something went wrong. We should display an error
-                # if this happens, usually because the maze size requested was too big to draw
-                # in our preview window.
-
-                # Note: only show this error box ONCE! (check if self.draw_failed is set)
-                # Otherwise, we will have a nasty recursive loop, since this function is
-                # called every single time an UI element updates.
-                debug_print("Hit paintEvent: draw_failed = %s" % self.draw_failed)
-                if not self.draw_failed:
-                    QMessageBox.warning(self.ui, "Error", "Could not draw maze with the given size, as there is simply not enough room! Try increasing the window size, or using image export instead.")
-
-                self.draw_failed = True
-
-            # Draw all our characters if defined. Do this in reversed order so that the earliest
-            # created sprites get drawn on top.
-            for character in self.sprites:
-                #debug_print("Drawing character %s" % character)
-                character.draw(painter)
-            painter.end()
-
-        self.display.paintEvent = paintEvent
+        self.display.paintEvent = self.paintEvent
 
         # Lambda functions wrap around select_tile() so it's called with arguments
         debug_print("Connecting set static start/finish buttons")
@@ -131,90 +92,125 @@ class MazeGUI(QMainWindow):
         # each mouse movement, and not just for clicks.
         self.display.setMouseTracking(True)
 
-        # Override the mouseMoveEvent function in our display object
-        # to track the mouse positions.
-        def mouseMoveEvent(event):
-            if not self.select_type:
-                # No selection process is going on.
-                return
-
-            mouseposition = event.pos()
-            debug_print(mouseposition)
-
-            # Get the X and Y coordinates of the mouse, relative to the widget.
-            xpos = mouseposition.x()
-            ypos = mouseposition.y()
-
-            # Find the X and Y positions of the mouse relative to the grid by
-            # diving these by the tile width and height.
-            xpos -= self.tile_width // 2
-            ypos -= self.tile_height // 2
-            xgridpos = int(xpos / self.tile_width)
-            ygridpos = int(ypos / self.tile_height)
-            debug_print(xgridpos, ygridpos)
-            debug_print("self.select_type is %s" % self.select_type)
-
-            for point in self.maze.all_items():
-                # Mark all points in the maze as not selected.
-                point.is_selected = False
-
-            try:
-                # Then, set the point that the mouse is hovering over
-                # as selected.
-                mazepoint = self.maze.get(xgridpos, ygridpos)
-                self.selected_point = (xgridpos, ygridpos)
-                mazepoint.is_selected = True
-            except IndexError:
-                return
-            else:
-                self.display.update()
-
-        # Ditto with the mouse pressed event: when the display is pressed after
-        # a point is chosen, make that the selected point and disable the
-        # tile selection overlay.
-        def mousePressEvent(event):
-            if not (self.selected_point and self.select_type and self.generated):
-                # No valid point was selected, or the selection overlay isn't enabled.
-                return
-
-            if self.select_type == 'start':
-                if self.static_finish and self.selected_point == self.static_finish:
-                    # Error if the start point we're trying to set is the same as the static
-                    # finish.
-                    QMessageBox.critical(self.ui, "Setting point failed",
-                                         "Cannot set the start and finish point to be the same point.")
-                    return
-
-                self.static_start = self.selected_point
-                debug_print("Set self.static_start to (%s, %s)" % self.selected_point)
-
-                # Change the button text to "Clear fixed start point" instead of setting.
-                self.set_static_start.setText("Clear fixed start point")
-
-            elif self.select_type == 'finish':
-                if self.static_start and self.selected_point == self.static_start:
-                    # Error if the finish point we're trying to set is the same as the static
-                    # start.
-                    QMessageBox.critical(self.ui, "Setting point failed",
-                                         "Cannot set the start and finish point to be the same point.")
-                    return
-
-                debug_print("Set self.static_finish to (%s, %s)" % self.selected_point)
-                self.static_finish = self.selected_point
-
-                self.set_static_finish.setText("Clear fixed finish point")
-
-            # Disable any further selections until one of the "select tile" buttons are pressed.
-            # Also unset the selected point so the red overlay goes away.
-            self.select_type = ''
-            self.maze.get(*self.selected_point).is_selected = False
-
-            self.display.update()
-
-        self.display.mouseMoveEvent = mouseMoveEvent
-        self.display.mousePressEvent = mousePressEvent
+        self.display.mouseMoveEvent = self.mouseMoveEvent
+        self.display.mousePressEvent = self.mousePressEvent
 
         self.setup_elements()
+
+    def paintEvent(self, event):
+        # In order to draw lines, shapes, etc. on a canvas, we use the QPainter
+        # class.
+        # QPainter() will only draw on widgets if called from the paintEvent()
+        # function attached to it, so we must assign one for it here.
+        # paintEvent() is automatically called for by Qt whenever the object
+        # is moved, resized, etc.
+        if not self.generated:
+            return  # Don't do anything if no maze has been generated
+
+        painter = QPainter()
+        painter.begin(self.display)
+
+        draw_result = self.draw_maze(painter, self.display.width(), self.display.height())
+        if not draw_result:
+            # draw_maze() returns False if something went wrong. We should display an error
+            # if this happens, usually because the maze size requested was too big to draw
+            # in our preview window.
+
+            # Note: only show this error box ONCE! (check if self.draw_failed is set)
+            # Otherwise, we will have a nasty recursive loop, since this function is
+            # called every single time an UI element updates.
+            debug_print("Hit paintEvent: draw_failed = %s" % self.draw_failed)
+            if not self.draw_failed:
+                QMessageBox.warning(self.ui, "Error", "Could not draw maze with the given size, as there is not enough space in the window! Try increasing the window size, or using image export instead.")
+
+            self.draw_failed = True
+
+        # Draw all our characters if defined. Do this in reversed order so that the earliest
+        # created sprites get drawn on top.
+        for character in self.sprites:
+            #debug_print("Drawing character %s" % character)
+            character.draw(painter)
+        painter.end()
+
+    # Override the mouseMoveEvent function in our display object
+    # to track the mouse positions.
+    def mouseMoveEvent(self, event):
+        if not self.select_type:
+            # No selection process is going on.
+            return
+
+        mouseposition = event.pos()
+        debug_print(mouseposition)
+
+        # Get the X and Y coordinates of the mouse, relative to the widget.
+        xpos = mouseposition.x()
+        ypos = mouseposition.y()
+
+        # Find the X and Y positions of the mouse relative to the grid by
+        # diving these by the tile width and height.
+        xpos -= self.tile_width // 2
+        ypos -= self.tile_height // 2
+        xgridpos = int(xpos / self.tile_width)
+        ygridpos = int(ypos / self.tile_height)
+        debug_print(xgridpos, ygridpos)
+        debug_print("self.select_type is %s" % self.select_type)
+
+        for point in self.maze.all_items():
+            # Mark all points in the maze as not selected.
+            point.is_selected = False
+
+        try:
+            # Then, set the point that the mouse is hovering over
+            # as selected.
+            mazepoint = self.maze.get(xgridpos, ygridpos)
+            self.selected_point = (xgridpos, ygridpos)
+            mazepoint.is_selected = True
+        except IndexError:
+            return
+        else:
+            self.display.update()
+
+    # Ditto with the mouse pressed event: when the display is pressed after
+    # a point is chosen, make that the selected point and disable the
+    # tile selection overlay.
+    def mousePressEvent(self, event):
+        if not (self.selected_point and self.select_type and self.generated):
+            # No valid point was selected, or the selection overlay isn't enabled.
+            return
+
+        if self.select_type == 'start':
+            if self.static_finish and self.selected_point == self.static_finish:
+                # Error if the start point we're trying to set is the same as the static
+                # finish.
+                QMessageBox.critical(self.ui, "Setting point failed",
+                                     "Cannot set the start and finish point to be the same point.")
+                return
+
+            self.static_start = self.selected_point
+            debug_print("Set self.static_start to (%s, %s)" % self.selected_point)
+
+            # Change the button text to "Clear fixed start point" instead of setting.
+            self.set_static_start.setText("Clear fixed start point")
+
+        elif self.select_type == 'finish':
+            if self.static_start and self.selected_point == self.static_start:
+                # Error if the finish point we're trying to set is the same as the static
+                # start.
+                QMessageBox.critical(self.ui, "Setting point failed",
+                                     "Cannot set the start and finish point to be the same point.")
+                return
+
+            debug_print("Set self.static_finish to (%s, %s)" % self.selected_point)
+            self.static_finish = self.selected_point
+
+            self.set_static_finish.setText("Clear fixed finish point")
+
+        # Disable any further selections until one of the "select tile" buttons are pressed.
+        # Also unset the selected point so the red overlay goes away.
+        self.select_type = ''
+        self.maze.get(*self.selected_point).is_selected = False
+
+        self.display.update()
 
     def closeEvent(self, event):
         """Quits the program cleanly by killing all threads."""
