@@ -178,8 +178,8 @@ class SerpentinePattern(enum.Enum):
     TOP_RIGHT = 2
 
 class SerpentineGrid(Grid):
-    def __init__(self, pattern, data=None):
-        super().__init__()
+    def __init__(self, pattern, width=3, height=3, data=None):
+        super().__init__(width=width, height=height)
         # Our backend in this case will just be one long array.
         if data is None:
             self.grid = ['' for _ in xrange(width*height)]
