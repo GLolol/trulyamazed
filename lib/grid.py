@@ -68,9 +68,9 @@ class Grid():
 
     def get(self, x, y):
         """Returns the contents of the grid item at (x, y)."""
-        if x < 0 or x > self.width:
+        if x < 0 or x >= self.width:
             raise IndexError("Width out of grid range")
-        elif y < 0 or y > self.width:
+        elif y < 0 or y >= self.height:
             raise IndexError("Height out of grid range")
         return self._get_coordinate(x, y)
 
@@ -82,9 +82,9 @@ class Grid():
 
     def set(self, x, y, obj, allowOverwrite=False):
         """Sets the contents of the grid item at (x, y)."""
-        if x < 0 or x > self.width:
+        if x < 0 or x >= self.width:
             raise IndexError("Width out of grid range")
-        elif y < 0 or y > self.width:
+        elif y < 0 or y >= self.height:
             raise IndexError("Height out of grid range")
 
         if (not allowOverwrite) and self._get_coordinate(x, y):
@@ -124,14 +124,14 @@ class Grid():
 
                 # Show the grid position if no value is set
                 # Note: show numerical 0 values as is
-                place = "(%s, %s)" % (colpos, rowpos)
+                place = "%s,%s" % (colpos, rowpos)
                 if value is None or value == '':
                     output = place
                 else:
                     output = str(value)
                 #output = place
 
-                output = output.center(self.largestlength, ' ')
+                output = output.center(max(len(place), self.largestlength), ' ')
                 print(output, end='')
             print('|')
             print('|%s' % ('-' * self.largestlength) * self.width + '|')
