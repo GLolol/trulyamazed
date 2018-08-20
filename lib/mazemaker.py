@@ -50,6 +50,12 @@ class MazeGridPoint():
     def __len__(self):
         return len(self.__repr__())
 
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
+    def __hash__(self):
+        return hash((self.x, self.y))
+
     def center(self, *args, **kwargs):
         return self.__repr__().center(*args, **kwargs)
 
@@ -127,25 +133,9 @@ class MazeGenerator():
         else:
             raise ValueError("Unknown direction given.")
 
-    def generate(self, start_point=None, end_point=None):
-        """
-        Generates the maze, with optional fixed start and end points.
-        """
+    def _generate(self, start_point=None):
         # Initialize an instance of the Grid class.
         self.grid = grid.Grid(self.width, self.height)
-
-        # Start point defaults to the top left of the maze.
-        self.static_start = start_point
-        start_point = start_point or (0, 0)
-
-        if start_point[0] >= self.width or start_point[1] >= self.height:
-            # Start point coordinates are outside our boundaries (likely
-            # due to setting a static point and then making the maze
-            # smaller. If this happens, just ignore that setting.
-            # TODO: make this more intelligent.
-            self.static_start = start_point = (0, 0)
-
-        self.static_finish = end_point
 
         # The first "current point" is the start point. This will change
         # as the generator moves from point to point.
@@ -163,7 +153,6 @@ class MazeGenerator():
         # added in the loop below.
         mazepoint = MazeGridPoint(x, y, [])
         self.grid.set(x, y, mazepoint)
-
 
         while stack:
             # While there are empty spaces beside a grid point, randomly
@@ -206,15 +195,40 @@ class MazeGenerator():
 
             current_point = new_point
             x, y = current_point
-            #debug_print("current point is (%s, %s)" % (x, y))
 
+    def generate(self, start_point=None, end_point=None):
+        """
+        Generates the maze, with optional fixed start and end points.
+        """
+
+        # Start point defaults to the top left of the maze.
+        self.static_start = start_point  # Set static_start if exists
+        start_point = start_point or (0, 0)
+
+        if start_point[0] >= self.width or start_point[1] >= self.height:
+            # Start point coordinates are outside our boundaries (likely
+            # due to setting a static point and then making the maze
+            # smaller. If this happens, just ignore that setting.
+            # TODO: make this more intelligent.
+            self.static_start = start_point = (0, 0)
+
+        self._generate(start_point)
+
+        self.static_finish = end_point  # Set static_finish if exists
 
         # Randomly choose two dead ends from the maze, unless a static start
         # or finish is being used.
+        while True:
+            try:
+                self.start, self.finish = random.sample(self.end_points, 2)
+                if self.start == self.finish:
+                    raise ValueError("Start and finish at the same point")
+            except (IndexError, ValueError):
+                debug_print("Maze was not random enough, regenerating!")
+                self._generate(start_point)
+            else:
+                break
 
-        # Sample without replacement, to ensure that the start and finish don't
-        # end up on the same tile.
-        self.start, self.finish = random.sample(self.end_points, 2)
         debug_print("List of end points: %s" % self.end_points)
         debug_print("Choosing %s and %s as our start and finish points" % (self.start, self.finish))
 
