@@ -88,7 +88,7 @@ class Grid():
         if (not allowOverwrite) and self._get_coordinate(x, y):
             raise GridItemFilledError("Coordinates requested have already been filled.")
 
-        objectlength = len(obj)
+        objectlength = len(str(obj))
         # If the length of the object is greater than the largest length we've
         # seen so far, update the length. This is used for grid formatting
         # purposes, so that each cell has the right width.
@@ -135,7 +135,7 @@ class Grid():
                 # Make each grid item N characters long, centring it and padding it with spaces.
                 # N is always the LARGEST object length we've seen so far, so that the cell
                 # has the right width.
-                output = char or place
+                output = str(char or place)
                 output = output.center(self.largestlength, ' ')
 
                 print(output, end='')
