@@ -52,7 +52,7 @@ class Grid():
         # grid, so that grid cells are formatted with the right widths.
         # 3 is a good default since it gives the grid ample space to start,
         # but it will grow if bigger strings are stored.
-        self.largestlength = 20
+        self.largestlength = 3
 
     def _get_coordinate(self, x, y):
         """
