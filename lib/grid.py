@@ -66,10 +66,12 @@ class Grid():
         """
         return self.grid[y][x]
 
-    def get(self, x, y, allowOverflow=False):
+    def get(self, x, y):
         """Returns the contents of the grid item at (x, y)."""
-        if (not allowOverflow) and (x < 0 or y < 0):
-            raise IndexError("Grid coordinate is negative.")
+        if x < 0 or x > self.width:
+            raise IndexError("Width out of grid range")
+        elif y < 0 or y > self.width:
+            raise IndexError("Height out of grid range")
         return self._get_coordinate(x, y)
 
     def _set_coordinate(self, x, y, obj):
