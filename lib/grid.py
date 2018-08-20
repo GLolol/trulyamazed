@@ -123,8 +123,14 @@ class Grid():
                 value = self.get(rowpos, colpos)
 
                 # Show the grid position if no value is set
+                # Note: show numerical 0 values as is
                 place = "(%s, %s)" % (colpos, rowpos)
-                output = str(value or place)
+                if value is None or value == '':
+                    output = place
+                else:
+                    output = str(value)
+                #output = place
+
                 output = output.center(self.largestlength, ' ')
                 print(output, end='')
             print('|')
