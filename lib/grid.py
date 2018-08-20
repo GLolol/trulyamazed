@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 ###
 # Copyright (c) 2015-2016 James Lu <glolol@overdrivenetworks.com>
 
@@ -194,13 +195,13 @@ class SerpentineGrid(Grid):
         coord = (y * self.height)
 
         # In TOP_RIGHT mode, even rows go in reverse and odd ones go forwards
-        if self.pattern == TOP_RIGHT:
+        if self.pattern == SerpentinePattern.TOP_RIGHT:
             if (y % 2 == 0):
                 coord += (self.width - x - 1)
             else:
                 coord += x
         # In TOP_LEFT mode, even rows go forwards and odd ones are in reverse
-        elif self.pattern == TOP_LEFT:
+        elif self.pattern == SerpentinePattern.TOP_LEFT:
             if (y % 2 == 0):
                 coord += x
             else:
