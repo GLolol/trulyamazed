@@ -18,9 +18,7 @@
 
 from __future__ import print_function
 import itertools
-import re
 import sys
-from random import shuffle
 
 if sys.version_info[0] >= 3:
     raw_input = input
