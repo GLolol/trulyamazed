@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import sys
 import functools
 
@@ -14,32 +15,38 @@ INTENSITY = 12
 SHOW_DUMMY_VALUES = False
 
 try:
-    from neopixel import *
+    from neopixel import Adafruit_NeoPixel, Color
 except ImportError:
     print("neopixel NOT FOUND - using dummy placeholder library instead.")
     class Dummy_NeoPixel:
         def __init__(self, npixels, *args, **kwargs):
             self._npixels = npixels
-            self._data = [None for _ in range(npixels)]
+            self._led_data = [None for _ in range(npixels)]
 
         def begin(self):
             pass
 
         def show(self):
             if SHOW_DUMMY_VALUES:
-                for idx, color in enumerate(self._data):
+                for idx, color in enumerate(self._led_data):
                     print("Pixel #%s: %s" % (idx, color))
 
         def setPixelColorRGB(self, target, *color):
-            try:
-                self._data[target] = color
-            except IndexError:
-                print("Out of range target %s" % target)
+            self._led_data[target] = Color(*color)
             print("Setting pixel %s to %s" % (target, str(color)))
+
+    # From rpi_ws281x library
+    def Color(red, green, blue, white=0):
+        """Convert the provided red, green, blue color to a 24-bit color value.
+        Each color component should be a value 0-255 where 0 is the lowest intensity
+        and 255 is the highest intensity.
+        """
+        return (white << 24) | (red << 16) | (green << 8) | blue
 
     Adafruit_NeoPixel = Dummy_NeoPixel
 
 from mazegame import MazeGame
+from lib import grid
 
 class RPiMaze(MazeGame):
     def __init__(self, *args, **kwargs):
@@ -49,39 +56,16 @@ class RPiMaze(MazeGame):
         self.np = Adafruit_NeoPixel(NUM_PIXELS, GPIO_PIN, brightness=INTENSITY)
         self.np.begin()
 
-    @staticmethod
-    @functools.lru_cache(maxsize=512)
-    def _get_serpentine_point(x, y):
-        """
-        Returns the LED number in the serpentine pattern used by LED matrix given x and y coordinates
-        (starting at top left being (0, 0)).
-        """
-        # The LEDs on the matrix we're testing are wired in this way:
-        #top left
-        #  7  6  5  4  3  2  1  0
-        #  8  9 10 11 12 13 14 15
-        # 23 22 21 20 19 18 17 16
-        # 24 25 26 27 28 29 30 31
-        # 39 38 37 36 35 34 33 32
-        #                  bottom right
-
-        # ..., where every even row (indexing from 0) is in reverse
-        # XXX: is this at all portable?
-
-        result = (y * MATRIX_WIDTH) + ((MATRIX_WIDTH - x - 1) if (y % 2 == 0) else x)
-        return result
+        # Chain our SerpentineGrid instance directly into the NeoPixel data.
+        self.led_grid = grid.SerpentineGrid(grid.SerpentinePattern.TOP_RIGHT, data=self.np._led_data,
+                                            width=MATRIX_WIDTH, height=MATRIX_HEIGHT)
 
     def draw_point_at(self, x, y, color):
-        # Don't try to draw out of bounds
-        if y > (MATRIX_HEIGHT-1) or y < 0:
-            print("Ignoring out of bound point %s, %s" % (x, y))
-            return
-        if x > (MATRIX_WIDTH-1) or x < 0:
-            print("Ignoring out of bound point %s, %s" % (x, y))
-            return
-
-        target = self._get_serpentine_point(x, y)
-        self.np.setPixelColorRGB(target, *color)
+        real_color = Color(*color)
+        try:
+            self.led_grid.set(x, y, real_color, allowOverwrite=True)
+        except IndexError:
+            pass
 
     def _draw_walls(self, wall_points_to_draw):
         for point in wall_points_to_draw:
@@ -136,6 +120,7 @@ class RPiMaze(MazeGame):
                 self._draw_walls(wall_points_to_draw)
                 self.draw_point_at(led_xpos, led_ypos, color)
         self.np.show()
+        self.led_grid.show()
 
     def draw_maze(self, *args, **kwargs):
         super().draw_maze(*args, **kwargs)
