@@ -33,22 +33,16 @@ class Grid():
     """Grid system using nested lists."""
     def __init__(self, width=3, height=3):
         """
-        Initialize the grid: a list of lists. The first (big) list is equal
-        to the amount of columns in the game. It includes a series of
-        sublists, each representing a row in the grid. Each item in the
-        sublist represents a space on the grid.
+        Initialize the grid. For the Cartesian grid, the backend is a list of lists:
+        each row is a list element inside the outside list, and its elements refer
+        to individual grid positions.
 
-        A 3 by 3 grid would look like, internally:
-           [['', '', ''], ['', '', ''], ['', '', '']]
-        In this implementation, the origin point (0, 0) is the top left. The
-        coordinates for a 3 by 3 grid would thus be the following.
+        Grid positions are initialized to an empty string, e.g. a 3x3 grid defaults to:
+            [['', '', ''], ['', '', ''], ['', '', '']]
+        The origin point (0, 0) is assumed to be the top left. The coordinates for a 3x3
+        grid would thus be the following:
            [[(0, 0), (1, 0), (2, 0)], [(0, 1), (1, 1), (2, 1)],
             [(0, 2), (1, 2), (2, 2)]]
-
-        We need to use list comprehensions instead of simply multiplying a list by
-        the width/height, so that each grid point has a distinct reference.
-        Otherwise, setting one point in the grid will cause other ones to be
-        changed too.
         """
         self.grid = [['' for _ in xrange(width)] for _ in xrange(height)]
         self.width = width
