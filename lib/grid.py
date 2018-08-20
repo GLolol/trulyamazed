@@ -77,10 +77,13 @@ class Grid():
         """
         self.grid[y][x] = obj
 
-    def set(self, x, y, obj, allowOverflow=False, allowOverwrite=False):
+    def set(self, x, y, obj, allowOverwrite=False):
         """Sets the contents of the grid item at (x, y)."""
-        if (not allowOverflow) and (x < 0 or y < 0):
-            raise IndexError("Grid coordinate is negative.")
+        if x < 0 or x > self.width:
+            raise IndexError("Width out of grid range")
+        elif y < 0 or y > self.width:
+            raise IndexError("Height out of grid range")
+
         if (not allowOverwrite) and self._get_coordinate(x, y):
             raise GridItemFilledError("Coordinates requested have already been filled.")
 
