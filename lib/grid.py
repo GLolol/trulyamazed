@@ -113,38 +113,22 @@ class Grid():
         | 7 | 8 | 9 |
         |---|---|---|, instead of each item being empty.
         """
-        # Print the top bar with the right cell width:
+        # Print the dividing bar with the right cell width between every row:
         #    |---|---|---|
         print('|%s' % ('-' * self.largestlength) * self.width + '|')
-        # To get the numbers of each grid point, first enumerate every rows'
-        # data with their position in the grid:
-        #    [(0, <contents of row 1>), (1, <contents of row 2>), (2, <contents of row 3), ...]
-        for rowpos, row in enumerate(self.grid, 0):
-            # In the same way, enumerate the column index and the data of each
-            # grid point in the row:
-            #    [(0, <contents of point (0, 0)>),
-            #     (1, <contents of point (1, 0)>),
-            #     (2, <contents of point (2, 0)>), ...]
-            for colpos, char in enumerate(row, 1):
+
+        for rowpos in range(self.height):
+            for colpos in range(self.width):
                 print('|', end='')
-                place = str(rowpos * self.width + colpos)
+                value = self.get(rowpos, colpos)
 
-                # Note:
-                # This can be uncommented so that the grid defaults to showing
-                # the internal grid position, instead of the numeric position.
-                #place = "(%s, %s)" % (colpos-1, rowpos)
-
-                # Make each grid item N characters long, centring it and padding it with spaces.
-                # N is always the LARGEST object length we've seen so far, so that the cell
-                # has the right width.
-                output = str(char or place)
+                # Show the grid position if no value is set
+                place = "(%s, %s)" % (colpos, rowpos)
+                output = str(value or place)
                 output = output.center(self.largestlength, ' ')
-
                 print(output, end='')
             print('|')
             print('|%s' % ('-' * self.largestlength) * self.width + '|')
-            # Print the dividing bar with the right cell width between every row:
-            #    |---|---|---|
 
     def __iter__(self):
         """Implements the iterable interface: list(grid), for point in grid, etc."""
