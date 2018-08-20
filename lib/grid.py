@@ -222,5 +222,9 @@ class SerpentineGrid(Grid):
         coord = self._get_serpentine_point(x, y)
         self.grid[coord] = obj
 
+    def all_items(self):
+        """Returns all the items in the grid."""
+        return self.grid
+
 if __name__ == '__main__':
     print("This module provides no command line functions.")
