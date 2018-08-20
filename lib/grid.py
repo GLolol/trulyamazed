@@ -59,26 +59,39 @@ class Grid():
         # but it will grow if bigger strings are stored.
         self.largestlength = 20
 
+    def _get_coordinate(self, x, y):
+        """
+        Fetches coordinate using Cartesian grid system.
+        """
+        return self.grid[y][x]
+
     def get(self, x, y, allowOverflow=False):
         """Returns the contents of the grid item at (x, y)."""
         if (not allowOverflow) and (x < 0 or y < 0):
             raise IndexError("Grid coordinate is negative.")
-        return self.grid[y][x]
+        return self._get_coordinate(x, y)
 
-    def set(self, x, y, object, allowOverflow=False, allowOverwrite=False):
+    def _set_coordinate(self, x, y, obj):
+        """
+        Sets a coordinate value using Cartesian grid system.
+        """
+        self.grid[y][x] = obj
+
+    def set(self, x, y, obj, allowOverflow=False, allowOverwrite=False):
         """Sets the contents of the grid item at (x, y)."""
         if (not allowOverflow) and (x < 0 or y < 0):
             raise IndexError("Grid coordinate is negative.")
-        if (not allowOverwrite) and self.grid[y][x]:
+        if (not allowOverwrite) and self._get_coordinate(x, y):
             raise GridItemFilledError("Coordinates requested have already been filled.")
 
-        objectlength = len(object)
+        objectlength = len(obj)
         # If the length of the object is greater than the largest length we've
         # seen so far, update the length. This is used for grid formatting
         # purposes, so that each cell has the right width.
         if objectlength > self.largestlength:
             self.largestlength = objectlength
-        self.grid[y][x] = object
+
+        self._set_coordinate(x, y, obj)
 
     def show(self):
         """
