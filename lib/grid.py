@@ -120,7 +120,7 @@ class Grid():
         for rowpos in range(self.height):
             for colpos in range(self.width):
                 print('|', end='')
-                value = self.get(rowpos, colpos)
+                value = self.get(colpos, rowpos)
 
                 # Show the grid position if no value is set
                 # Note: show numerical 0 values as is
