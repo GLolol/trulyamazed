@@ -31,20 +31,25 @@ class GridItemFilledError(ValueError):
 
 class Grid():
     """Grid system using nested lists."""
-    def __init__(self, width=3, height=3):
+    def __init__(self, width=3, height=3, data=None):
         """
         Initialize the grid. For the Cartesian grid, the backend is a list of lists:
         each row is a list element inside the outside list, and its elements refer
         to individual grid positions.
 
-        Grid positions are initialized to an empty string, e.g. a 3x3 grid defaults to:
+        Unless data is given, grid positions are initialized to empty strings.
+        e.g. a 3x3 grid defaults to:
             [['', '', ''], ['', '', ''], ['', '', '']]
+
         The origin point (0, 0) is assumed to be the top left. The coordinates for a 3x3
         grid would thus be the following:
            [[(0, 0), (1, 0), (2, 0)], [(0, 1), (1, 1), (2, 1)],
             [(0, 2), (1, 2), (2, 2)]]
         """
-        self.grid = [['' for _ in xrange(width)] for _ in xrange(height)]
+        if data is None:
+            self.grid = [['' for _ in xrange(width)] for _ in xrange(height)]
+        else:
+            self.grid = data
         self.width = width
         self.height = height
 
@@ -169,10 +174,13 @@ class SerpentinePattern(enum.Enum):
     TOP_RIGHT = 2
 
 class SerpentineGrid(Grid):
-    def __init__(self, pattern):
+    def __init__(self, pattern, data=None):
         super().__init__()
         # Our backend in this case will just be one long array.
-        self.grid = ['' for _ in xrange(width*height)]
+        if data is None:
+            self.grid = ['' for _ in xrange(width*height)]
+        else:
+            self.grid = data
 
         self.pattern = pattern
 
