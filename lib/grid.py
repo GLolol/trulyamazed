@@ -19,6 +19,7 @@
 from __future__ import print_function
 import itertools
 import sys
+import enum
 
 if sys.version_info[0] >= 3:
     raw_input = input
@@ -61,7 +62,7 @@ class Grid():
 
     def _get_coordinate(self, x, y):
         """
-        Fetches coordinate using Cartesian grid system.
+        Fetches the value of the point at (x, y) using a Cartesian grid system.
         """
         return self.grid[y][x]
 
@@ -73,7 +74,7 @@ class Grid():
 
     def _set_coordinate(self, x, y, obj):
         """
-        Sets a coordinate value using Cartesian grid system.
+        Sets the point at (x, y) to the given object.
         """
         self.grid[y][x] = obj
 
@@ -152,6 +153,69 @@ class Grid():
     def all_items(self):
         """Returns all the items in the grid, reduced into one list."""
         return list(itertools.chain.from_iterable(self.grid))
+
+class SerpentinePattern(enum.Enum):
+    """Enum referring to serpentine pattern start points common in LED matrix boards."""
+    #top left
+    #  0  1  2  3  4  5  6  7
+    # 15 14 13 12 11 10  9  8
+    # 16 17 18 19 20 21 22 23
+    # 31 30 29 28 27 26 25 24
+    # 32 33 34 35 36 37 38 39
+    #                  bottom right
+    TOP_LEFT = 1
+
+    #top left
+    #  7  6  5  4  3  2  1  0
+    #  8  9 10 11 12 13 14 15
+    # 23 22 21 20 19 18 17 16
+    # 24 25 26 27 28 29 30 31
+    # 39 38 37 36 35 34 33 32
+    #                  bottom right
+    TOP_RIGHT = 2
+
+class SerpentineGrid(Grid):
+    def __init__(self, pattern):
+        super().__init__()
+        # Our backend in this case will just be one long array.
+        self.grid = ['' for _ in xrange(width*height)]
+
+        self.pattern = pattern
+
+    def _get_serpentine_point(self, x, y):
+        """
+        Fetches the array index of the point (x, y) using a Serpentine grid system.
+        """
+        coord = (y * self.height)
+
+        # In TOP_RIGHT mode, even rows go in reverse and odd ones go forwards
+        if self.pattern == TOP_RIGHT:
+            if (y % 2 == 0):
+                coord += (self.width - x - 1)
+            else:
+                coord += x
+        # In TOP_LEFT mode, even rows go forwards and odd ones are in reverse
+        elif self.pattern == TOP_LEFT:
+            if (y % 2 == 0):
+                coord += x
+            else:
+                coord += (self.width - x - 1)
+
+        return coord
+
+    def _get_coordinate(self, x, y):
+        """
+        Fetches the value of the point at (x, y) using a Serpentine grid system.
+        """
+        coord = self._get_serpentine_point(x, y)
+        return self.grid[coord]
+
+    def _set_coordinate(self, x, y, obj):
+        """
+        Sets the point at (x, y) to the given object.
+        """
+        coord = self._get_serpentine_point(x, y)
+        self.grid[coord] = obj
 
 if __name__ == '__main__':
     print("This module provides no command line functions.")
