@@ -141,13 +141,13 @@ class Grid():
             #    |---|---|---|
 
     def __iter__(self):
-        # This overrides list(Grid()), so that it returns meaningful results instead of an error.
+        """Implements the iterable interface: list(grid), for point in grid, etc."""
         for item in self.grid:
             yield item
 
     def __repr__(self):
-        # This overrides str(Grid()), so that it gives meaningful results instead of something like <Grid instance at 0x12345678>
-        return repr(self.grid)
+        """Overrides string conversion to show the Grid's elements."""
+        return "Grid(%s)" % self.grid
 
     def all_items(self):
         """Returns all the items in the grid, reduced into one list."""
