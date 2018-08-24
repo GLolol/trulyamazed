@@ -7,11 +7,11 @@ from PyQt5.QtGui import *
 from PyQt5.uic import loadUi
 #from PyQt5.QtCore import *
 
-GPIO_PIN = 18
+GPIO_PIN = 10
 MATRIX_WIDTH = 16
 MATRIX_HEIGHT = 16
 NUM_PIXELS = MATRIX_WIDTH * MATRIX_HEIGHT
-INTENSITY = 12
+INTENSITY = 20
 SHOW_DUMMY_VALUES = False
 
 try:
@@ -60,8 +60,15 @@ class RPiMaze(MazeGame):
         self.led_grid = grid.SerpentineGrid(grid.SerpentinePattern.TOP_RIGHT, data=self.np._led_data,
                                             width=MATRIX_WIDTH, height=MATRIX_HEIGHT)
 
+    @staticmethod
+    def hexcolor_to_rgb(colorstr):
+        # https://stackoverflow.com/a/29643643 TODO: abstract this out some more
+        color = tuple(int(colorstr.lstrip('#')[i:i+2], 16) for i in (0, 2, 4))
+        print("%s: %s" % (colorstr, str(color)))
+        return color
+
     def draw_point_at(self, x, y, color):
-        real_color = Color(*color)
+        real_color = Color(color[1], color[2], color[0])
         try:
             self.led_grid.set(x, y, real_color, allowOverwrite=True)
         except IndexError:
@@ -69,7 +76,7 @@ class RPiMaze(MazeGame):
 
     def _draw_walls(self, wall_points_to_draw):
         for point in wall_points_to_draw:
-            print("Drawing LED point %s, %s as a wall" % (point[0], point[1]))
+            #print("Drawing LED point %s, %s as a wall" % (point[0], point[1]))
             self.draw_point_at(point[0], point[1], (255, 255, 255))
 
     def draw_maze_leds(self):
@@ -81,25 +88,24 @@ class RPiMaze(MazeGame):
         for ypos, row in enumerate(self.maze):
             for xpos, point in enumerate(row):
                 if point.is_finish:
-                    color = (0, 0, 255)
+                    color = self.hexcolor_to_rgb(self.FINISH_COLOR)
                 elif point.is_start:
-                    color = (255, 255, 0)
+                    color = self.hexcolor_to_rgb(self.START_COLOR)
                 else:
                     # Empty tile
                     color = (0, 0, 0)
 
                 for sprite in self.sprites:
                     if sprite.x == xpos and sprite.y == ypos:
-                        # https://stackoverflow.com/a/29643643 TODO: abstract this out some more
-                        color = tuple(int(sprite.color.lstrip('#')[i:i+2], 16) for i in (0, 2, 4))
+                        color = self.hexcolor_to_rgb(sprite.color)
                         print("Setting color to %s for sprite %s at %s, %s" % (color, sprite, xpos, ypos))
 
                 if point.is_selected:
-                    color = (130, 0, 250)
+                    color = self.hexcolor_to_rgb(self.SELECTED_COLOR)
 
                 led_xpos = xpos * 2
                 led_ypos = ypos * 2
-                print("Translating player position (%s, %s) into LED position (%s, %s)" % (xpos, ypos, led_xpos, led_ypos))
+                #print("Translating player position (%s, %s) into LED position (%s, %s)" % (xpos, ypos, led_xpos, led_ypos))
 
                 wall_points_to_draw = {
                     (led_xpos-1, led_ypos-1),
