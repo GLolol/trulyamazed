@@ -46,7 +46,7 @@ except ImportError:
     Adafruit_NeoPixel = Dummy_NeoPixel
 
 from mazegame import MazeGame
-from lib import grid
+from simplegrid import led_grid, grid
 
 class RPiMaze(MazeGame):
     def __init__(self, *args, **kwargs):
@@ -56,14 +56,12 @@ class RPiMaze(MazeGame):
         self.np = Adafruit_NeoPixel(NUM_PIXELS, GPIO_PIN, brightness=INTENSITY)
         self.np.begin()
 
-        # Chain our SerpentineGrid instance directly into the NeoPixel data.
-        self.led_grid = grid.SerpentineGrid(grid.SerpentinePattern.TOP_RIGHT, data=self.np._led_data,
-                                            width=MATRIX_WIDTH, height=MATRIX_HEIGHT)
+        self.led_grid = led_grid.LEDGrid(self.np, grid.SerpentinePattern.TOP_RIGHT,
+                                         width=MATRIX_WIDTH, height=MATRIX_HEIGHT)
 
     def draw_point_at(self, x, y, color):
-        real_color = Color(*color)
         try:
-            self.led_grid.set(x, y, real_color, allowOverwrite=True)
+            self.led_grid.set(x, y, color, allowOverwrite=True)
         except IndexError:
             pass
 
