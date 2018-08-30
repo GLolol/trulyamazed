@@ -19,10 +19,11 @@
 """
 Generates mazes using a depth-first search algorithm.
 """
-
-from . import grid
-from lib.util import *
+import sys
 import random
+
+from simplegrid import grid
+from lib.util import *
 
 directions = ("north", "west", "south", "east")
 

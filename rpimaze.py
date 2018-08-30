@@ -7,6 +7,8 @@ from PyQt5.QtGui import *
 from PyQt5.uic import loadUi
 #from PyQt5.QtCore import *
 
+from simplegrid import led_grid, grid
+
 GPIO_PIN = 18
 MATRIX_WIDTH = 16
 MATRIX_HEIGHT = 16
@@ -46,7 +48,6 @@ except ImportError:
     Adafruit_NeoPixel = Dummy_NeoPixel
 
 from mazegame import MazeGame
-from simplegrid import led_grid, grid
 
 class RPiMaze(MazeGame):
     def __init__(self, *args, **kwargs):
