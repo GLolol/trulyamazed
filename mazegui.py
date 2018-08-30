@@ -35,6 +35,9 @@ class MazeGUI(QMainWindow):
     """
     Graphical Maze generator app, written using PyQt5.
     """
+    FINISH_COLOR = '#99BCFF'
+    START_COLOR = '#99FF99'
+    SELECTED_COLOR = '#AA0000'
 
     def __init__(self, app, uifile):
         # Call the init function of the parent class (in this case, Qt's Window
@@ -305,10 +308,10 @@ class MazeGUI(QMainWindow):
                 if point.is_finish:
                     # Finish point is light blue.
                     #debug_print("Colouring point %s blue" % point)
-                    painter.setBrush(QColor('#99BCFF'))
+                    painter.setBrush(QColor(self.FINISH_COLOR))
                 elif point.is_start:
                     # Start point colour is light green.
-                    painter.setBrush(QColor('#99FF99'))
+                    painter.setBrush(QColor(self.START_COLOR))
                     #debug_print("Colouring point %s green" % point)
                 else:
                     # Normal tile with no visible fill.
@@ -345,7 +348,7 @@ class MazeGUI(QMainWindow):
                 if point.is_selected:
                     # If the point is being selected (when choosing static start/finish tiles), fill
                     # it with dark red. Note: only do this after drawing darkness.
-                    fill_color = QColor('#AA0000')
+                    fill_color = QColor(self.SELECTED_COLOR)
                     # Make this slightly transparent so finishes and other special points are visible.
                     fill_color.setAlpha(200)
                     painter.setBrush(fill_color)
