@@ -76,7 +76,7 @@ class RPiMaze(MazeGame):
         """
         for pixel in range(NUM_PIXELS):
             self.np.setPixelColorRGB(pixel, 0, 0, 0)
-        for ypos, row in enumerate(self.maze):
+        for ypos, row in enumerate(self.maze.by_rows()):
             for xpos, point in enumerate(row):
                 if point.is_finish:
                     color = (0, 0, 255)

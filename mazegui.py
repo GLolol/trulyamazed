@@ -287,7 +287,7 @@ class MazeGUI(QMainWindow):
         ypos = self.tile_height
 
         # Iterate over every point in the maze.
-        for row in self.maze:
+        for row in self.maze.by_rows():
             for point in row:
                 # The lines around each grid point in the maze is drawn relative to the
                 # centre of that point. The distances between the lines and the centre of
